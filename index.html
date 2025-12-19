@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfer Key Activation Process</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            color: white;
+            padding: 25px 30px;
+            border-bottom: 5px solid #3498db;
+        }
+        
+        header h1 {
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        header h1 i {
+            color: #3498db;
+        }
+        
+        .process-steps {
+            display: flex;
+            background-color: #f8f9fa;
+            padding: 0;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .step {
+            flex: 1;
+            padding: 18px 10px;
+            text-align: center;
+            font-weight: 600;
+            position: relative;
+            color: #7f8c8d;
+            transition: all 0.3s ease;
+        }
+        
+        .step.active {
+            color: #2c3e50;
+            background-color: white;
+            border-top: 3px solid #3498db;
+        }
+        
+        .step.completed {
+            color: #27ae60;
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            background-color: #ecf0f1;
+            color: #7f8c8d;
+            border-radius: 50%;
+            line-height: 32px;
+            margin-right: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .step.active .step-number {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .step.completed .step-number {
+            background-color: #27ae60;
+            color: white;
+        }
+        
+        .step:not(:last-child):after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 60%;
+            background-color: #ddd;
+        }
+        
+        .page-container {
+            padding: 40px;
+            min-height: 500px;
+        }
+        
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .page-title {
+            font-size: 24px;
+            margin-bottom: 25px;
+            color: #2c3e50;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .page-title i {
+            color: #3498db;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-with-icon i {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f8c8d;
+        }
+        
+        .info-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .info-box h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .details-table th, .details-table td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .details-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+            width: 30%;
+        }
+        
+        .details-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+        }
+        
+        .btn {
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-prev {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            border: 2px solid #ddd;
+        }
+        
+        .btn-prev:hover {
+            background-color: #e9ecef;
+            border-color: #adb5bd;
+        }
+        
+        .btn-next, .btn-submit {
+            background: linear-gradient(135deg, #3498db, #2c80b9);
+            color: white;
+        }
+        
+        .btn-next:hover, .btn-submit:hover {
+            background: linear-gradient(135deg, #2c80b9, #1c6ea4);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+        }
+        
+        .btn:disabled {
+            background-color: #ecf0f1;
+            color: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .success-message {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .success-icon {
+            font-size: 80px;
+            color: #27ae60;
+            margin-bottom: 30px;
+        }
+        
+        .success-message h2 {
+            color: #27ae60;
+            margin-bottom: 15px;
+        }
+        
+        .transfer-key-display {
+            background-color: #f8f9fa;
+            border: 2px dashed #3498db;
+            padding: 20px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: #2c3e50;
+            letter-spacing: 8px;
+            margin: 30px 0;
+            border-radius: 8px;
+            font-family: monospace;
+        }
+        
+        .key-highlight {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 25px;
+            background-color: #f8f9fa;
+            color: #7f8c8d;
+            font-size: 14px;
+            border-top: 1px solid #eaeaea;
+        }
+        
+        @media (max-width: 768px) {
+            .process-steps {
+                flex-direction: column;
+            }
+            
+            .step:not(:last-child):after {
+                display: none;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .page-container {
+                padding: 25px;
+            }
+            
+            .transfer-key-display {
+                font-size: 22px;
+                letter-spacing: 5px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-key"></i> Transfer Key Activation Process</h1>
+            <p>Secure activation process for document transfer keys - Using Key: 654321</p>
+        </header>
+        
+        <div class="process-steps">
+            <div class="step active" id="step1">
+                <span class="step-number">1</span>
+                <span class="step-text">Enter Transfer Key</span>
+            </div>
+            <div class="step" id="step2">
+                <span class="step-number">2</span>
+                <span class="step-text">Verify & Activate</span>
+            </div>
+            <div class="step" id="step3">
+                <span class="step-number">3</span>
+                <span class="step-text">Confirmation</span>
+            </div>
+        </div>
+        
+        <div class="page-container">
+            <!-- Page 1: Enter Transfer Key -->
+            <div class="page active" id="page1">
+                <div class="page-title">
+                    <i class="fas fa-key"></i>
+                    <h2>Step 1: Enter Transfer Key</h2>
+                </div>
+                
+                <div class="key-highlight">
+                    <h3><i class="fas fa-exclamation-circle"></i> Important Note</h3>
+                    <p>You have been assigned transfer key: <strong>654321</strong>. Please enter this 6-digit key below to begin the activation process.</p>
+                </div>
+                
+                <div class="info-box">
+                    <h3><i class="fas fa-info-circle"></i> About Transfer Keys</h3>
+                    <p>A transfer key is a secure 6-digit code required to activate document transfer permissions. This key should have been provided to you by the document owner or system administrator.</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="transferKey"><i class="fas fa-key"></i> Transfer Key</label>
+                    <div class="input-with-icon">
+                        <input type="text" id="transferKey" placeholder="Enter your 6-digit transfer key (e.g., 654321)" maxlength="6" value="654321">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <small style="color: #7f8c8d; display: block; margin-top: 8px;">Enter the 6-digit numeric transfer key exactly as provided.</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email address for verification">
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-prev" disabled>
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn btn-next" id="nextToPage2">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Page 2: Verify & Activate -->
+            <div class="page" id="page2">
+                <div class="page-title">
+                    <i class="fas fa-check-circle"></i>
+                    <h2>Step 2: Verify & Activate</h2>
+                </div>
+                
+                <div class="info-box">
+                    <h3><i class="fas fa-shield-alt"></i> Security Verification</h3>
+                    <p>Please verify the transfer details below and enter the activation code sent to your email address to complete the process.</p>
+                </div>
+                
+                <table class="details-table">
+                    <tr>
+                        <th>Transfer Key:</th>
+                        <td id="displayTransferKey">654321</td>
+                    </tr>
+                    <tr>
+                        <th>Document Type:</th>
+                        <td id="displayDocType">Confidential Financial Report</td>
+                    </tr>
+                    <tr>
+                        <th>Owner:</th>
+                        <td id="displayOwner">Global Financial Corp</td>
+                    </tr>
+                    <tr>
+                        <th>Expiration Date:</th>
+                        <td id="displayExpiry">December 31, 2031</td>
+                    </tr>
+                    <tr>
+                        <th>Recipient Email:</th>
+                        <td id="displayEmail">user@example.com</td>
+                    </tr>
+                    <tr>
+                        <th>Transfer Size:</th>
+                        <td>15 documents (45 MB total)</td>
+                    </tr>
+                </table>
+                
+                <div class="form-group">
+                    <label for="activationCode"><i class="fas fa-code"></i> Activation Code</label>
+                    <div class="input-with-icon">
+                        <input type="text" id="activationCode" placeholder="Enter 6-digit code from your email" maxlength="6">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <small style="color: #7f8c8d; display: block; margin-top: 8px;">A 6-digit activation code has been sent to your email address. Enter it here to proceed.</small>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="termsAgreement">
+                        I agree to the <a href="#" style="color: #3498db;">Terms of Service</a> and confirm that I am authorized to activate this transfer key.
+                    </label>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-prev" id="prevToPage1">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn btn-next" id="nextToPage3">
+                        Activate <i class="fas fa-check"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Page 3: Confirmation -->
+            <div class="page" id="page3">
+                <div class="page-title">
+                    <i class="fas fa-flag-checkered"></i>
+                    <h2>Step 3: Activation Complete</h2>
+                </div>
+                
+                <div class="success-message">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    
+                    <h2>Transfer Key Successfully Activated!</h2>
+                    <p>Your document transfer key has been verified and activated. You can now access the transferred documents.</p>
+                    
+                    <div class="transfer-key-display" id="finalTransferKey">
+                        654321
+                    </div>
+                    
+                    <div class="info-box" style="text-align: left; margin-top: 30px;">
+                        <h3><i class="fas fa-file-alt"></i> Activation Details</h3>
+                        <ul style="padding-left: 20px; margin-top: 10px;">
+                            <li><strong>Transfer Key:</strong> 654321 (activated successfully)</li>
+                            <li><strong>Activation Time:</strong> <span id="activationTime"></span></li>
+                            <li><strong>Documents Available:</strong> 15 files (45 MB total)</li>
+                            <li><strong>Access Duration:</strong> 30 days from activation date</li>
+                            <li><strong>Reference ID:</strong> TK-654321-2023</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="margin-top: 40px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                        <button class="btn btn-submit" id="btnFinish">
+                            <i class="fas fa-download"></i> Download Documents
+                        </button>
+                        <button class="btn" style="background-color: #f8f9fa; color: #2c3e50;" id="btnPrintSummary">
+                            <i class="fas fa-print"></i> Print Summary
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-prev" id="prevToPage2">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn" style="background-color: #f8f9fa; color: #2c3e50;" id="btnNewActivation">
+                        <i class="fas fa-redo"></i> Start New Activation
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><i class="fas fa-shield-alt"></i> Secure Document Transfer System v2.1 • Transfer Key: 654321</p>
+            <p style="margin-top: 8px; font-size: 12px;">This process uses 256-bit encryption for maximum security</p>
+        </div>
+    </div>
+
+    <script>
+        // DOM elements
+        const steps = document.querySelectorAll('.step');
+        const pages = document.querySelectorAll('.page');
+        const nextToPage2Btn = document.getElementById('nextToPage2');
+        const nextToPage3Btn = document.getElementById('nextToPage3');
+        const prevToPage1Btn = document.getElementById('prevToPage1');
+        const prevToPage2Btn = document.getElementById('prevToPage2');
+        const btnFinish = document.getElementById('btnFinish');
+        const btnNewActivation = document.getElementById('btnNewActivation');
+        const btnPrintSummary = document.getElementById('btnPrintSummary');
+        const transferKeyInput = document.getElementById('transferKey');
+        const emailInput = document.getElementById('email');
+        const activationCodeInput = document.getElementById('activationCode');
+        const termsAgreement = document.getElementById('termsAgreement');
+        const activationTimeElement = document.getElementById('activationTime');
+        
+        // Display elements for page 2
+        const displayTransferKey = document.getElementById('displayTransferKey');
+        const displayEmail = document.getElementById('displayEmail');
+        const finalTransferKey = document.getElementById('finalTransferKey');
+        
+        // Sample data for demonstration
+        const sampleData = {
+            transferKey: '654321',
+            docType: 'Confidential Financial Report',
+            owner: 'Global Financial Corp',
+            expiry: 'December 31, 2023',
+            email: 'user@example.com'
+        };
+        
+        // Current page state
+        let currentPage = 1;
+        
+        // Set current date/time for activation
+        function setCurrentDateTime() {
+            const now = new Date();
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                timeZoneName: 'short'
+            };
+            activationTimeElement.textContent = now.toLocaleDateString('en-US', options);
+        }
+        
+        // Initialize the form with sample data
+        function initializeForm() {
+            transferKeyInput.value = sampleData.transferKey;
+            emailInput.value = sampleData.email;
+            
+            // Set display values for page 2
+            displayTransferKey.textContent = sampleData.transferKey;
+            displayEmail.textContent = sampleData.email;
+            document.getElementById('displayDocType').textContent = sampleData.docType;
+            document.getElementById('displayOwner').textContent = sampleData.owner;
+            document.getElementById('displayExpiry').textContent = sampleData.expiry;
+            
+            // Set final display value
+            finalTransferKey.textContent = sampleData.transferKey;
+            
+            // Set activation time
+            setCurrentDateTime();
+        }
+        
+        // Navigate to a specific page
+        function goToPage(pageNumber) {
+            // Hide all pages
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show the target page
+            document.getElementById(`page${pageNumber}`).classList.add('active');
+            
+            // Update step indicators
+            steps.forEach(step => {
+                step.classList.remove('active', 'completed');
+            });
+            
+            // Mark previous steps as completed, current as active
+            for (let i = 1; i <= steps.length; i++) {
+                if (i < pageNumber) {
+                    document.getElementById(`step${i}`).classList.add('completed');
+                } else if (i === pageNumber) {
+                    document.getElementById(`step${i}`).classList.add('active');
+                }
+            }
+            
+            currentPage = pageNumber;
+            
+            // Update activation time when reaching page 3
+            if (pageNumber === 3) {
+                setCurrentDateTime();
+            }
+        }
+        
+        // Validate transfer key (6-digit numeric validation)
+        function validateTransferKey(key) {
+            return key.length === 6 && /^\d+$/.test(key);
+        }
+        
+        // Validate email
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        // Validate activation code (6-digit numeric)
+        function validateActivationCode(code) {
+            return code.length === 6 && /^\d+$/.test(code);
+        }
+        
+        // Event listeners
+        nextToPage2Btn.addEventListener('click', function() {
+            const transferKey = transferKeyInput.value.trim();
+            const email = emailInput.value.trim();
+            
+            // Validate inputs
+            if (!validateTransferKey(transferKey)) {
+                alert('Please enter a valid 6-digit numeric transfer key (e.g., 654321).');
+                transferKeyInput.focus();
+                return;
+            }
+            
+            if (!validateEmail(email)) {
+                alert('Please enter a valid email address.');
+                emailInput.focus();
+                return;
+            }
+            
+            // Update display values with user input
+            displayTransferKey.textContent = transferKey;
+            displayEmail.textContent = email;
+            finalTransferKey.textContent = transferKey;
+            
+            // Show a simulated "sending activation code" message
+            alert(`Activation code sent to ${email}. For this demo, use code: 123456`);
+            
+            goToPage(2);
+        });
+        
+        nextToPage3Btn.addEventListener('click', function() {
+            const activationCode = activationCodeInput.value.trim();
+            
+            // Validate inputs
+            if (!validateActivationCode(activationCode)) {
+                alert('Please enter a valid 6-digit activation code.');
+                activationCodeInput.focus();
+                return;
+            }
+            
+            if (!termsAgreement.checked) {
+                alert('You must agree to the Terms of Service to proceed.');
+                return;
+            }
+            
+            // In a real app, you would verify the activation code with the server here
+            // For this demo, we'll accept any 6-digit code
+            if (activationCode.length === 6 && /^\d+$/.test(activationCode)) {
+                goToPage(3);
+            } else {
+                alert('Invalid activation code. Please check and try again.');
+            }
+        });
+        
+        prevToPage1Btn.addEventListener('click', function() {
+            goToPage(1);
+        });
+        
+        prevToPage2Btn.addEventListener('click', function() {
+            goToPage(2);
+        });
+        
+        btnFinish.addEventListener('click', function() {
+            alert('Download initiated for documents associated with transfer key 654321!');
+            // In a real app, this would trigger the actual document download
+        });
+        
+        btnPrintSummary.addEventListener('click', function() {
+            window.print();
+        });
+        
+        btnNewActivation.addEventListener('click', function() {
+            // Reset form
+            transferKeyInput.value = '654321'; // Keep the key but clear other fields
+            emailInput.value = '';
+            activationCodeInput.value = '';
+            termsAgreement.checked = false;
+            
+            // Reset to sample data for convenience
+            initializeForm();
+            
+            // Go back to first page
+            goToPage(1);
+            
+            alert('Form reset. Transfer key 654321 is pre-filled. Enter your email to continue.');
+        });
+        
+        // Input validation real-time feedback
+        transferKeyInput.addEventListener('input', function() {
+            const key = this.value.trim();
+            // Only allow numbers
+            this.value = key.replace(/\D/g, '');
+            
+            // Update the button state based on validation
+            const email = emailInput.value.trim();
+            nextToPage2Btn.disabled = !(validateTransferKey(key) && validateEmail(email));
+        });
+        
+        emailInput.addEventListener('input', function() {
+            const email = this.value.trim();
+            const key = transferKeyInput.value.trim();
+            
+            // Update the button state based on validation
+            nextToPage2Btn.disabled = !(validateTransferKey(key) && validateEmail(email));
+        });
+        
+        activationCodeInput.addEventListener('input', function() {
+            const code = this.value.trim();
+            // Only allow numbers
+            this.value = code.replace(/\D/g, '');
+            
+            // Update the button state based on validation
+            nextToPage3Btn.disabled = !(validateActivationCode(code) && termsAgreement.checked);
+        });
+        
+        termsAgreement.addEventListener('change', function() {
+            const code = activationCodeInput.value.trim();
+            nextToPage3Btn.disabled = !(validateActivationCode(code) && this.checked);
+        });
+        
+        // Initialize the form with sample data
+        initializeForm();
+        
+        // Initialize button states
+        nextToPage2Btn.disabled = !(validateTransferKey(transferKeyInput.value) && validateEmail(emailInput.value));
+        nextToPage3Btn.disabled = true;
+        
+        // Auto-focus on email field since transfer key is pre-filled
+        window.addEventListener('load', function() {
+            if (transferKeyInput.value === '654321') {
+                emailInput.focus();
+            }
+        });
+    </script>
+</body>
+</html>
